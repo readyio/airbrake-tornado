@@ -30,11 +30,13 @@ def _params_element(req):
     return params
 
 
-def _request_element(request):
+def _request_element(request, component=None):
     req = Element("request")
     req.append(_el_with_text("url", request.uri))
     req.append(_cgi_data_element(request))
     req.append(_params_element(request))
+    if component is not None:
+      req.append(_el_with_text("component", component))
     return req
 
 
@@ -45,7 +47,8 @@ def _backtrace_element(exc_info):
     return backtrace
 
 
-def notify(exc_info, request, name, api_key=None, environment=None, url=None):
+def notify(exc_info, request, name, api_key=None, environment=None, url=None,
+    handler=None):
 
     if api_key is None or environment is None:
         return
@@ -67,8 +70,12 @@ def notify(exc_info, request, name, api_key=None, environment=None, url=None):
 
     error.append(_backtrace_element(exc_info))
     notice.append(error)
-
-    notice.append(_request_element(request))
+    
+    if handler is not None:
+      component = handler.__class__.__name__
+    else:
+      component = None
+    notice.append(_request_element(request, component=component))
 
     server_environment = Element("server-environment")
     server_environment.append(_el_with_text("environment-name", environment))
