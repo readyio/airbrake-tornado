@@ -70,6 +70,10 @@ def notify(exc_info, request, name, api_key=None, environment=None, url=None):
 
     notice.append(_request_element(request))
 
+    server_environment = Element("server_environment")
+    server_environment.append(_el_with_text("environment-name", environment))
+    notice.append(server_environment)
+
     def handle_request(response):
         if response.error:
             logging.error("Cannot submit exception: %s", response.error)
