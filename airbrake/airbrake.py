@@ -19,10 +19,24 @@ def _traceback_line(filename, line, method):
 
 def _cgi_data_element(req):
     cgi_data = Element("cgi-data")
+    environment = {
+        'HTTP_METHOD': req.method,
+        'BODY': req.body.decode('utf-8') if req.body else u'',
+        'URI': req.uri,
+        'PATH': req.path,
+        'QUERY': req.uri,
+        'URI': req.query,
+        'HTTP_VERSION': req.version,
+        'REMOTE_IP': req.remote_ip,
+        'PROTOCOL': req.protocol,
+        'FULL_URL': req.full_url(),
+        'REQUEST_TIME': str(req.request_time())
+    }
     for key, val in req.headers.iteritems():
+        environment[key.upper()] = val
+    for key,val in environment.iteritems():
         cgi_data.append(_el_with_text("var", val, key=key))
     return cgi_data
-
 
 def _params_element(req):
     params = Element("params")
