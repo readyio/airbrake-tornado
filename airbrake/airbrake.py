@@ -1,5 +1,6 @@
 import logging
 import traceback
+import os
 
 from tornado import httpclient
 from xml.etree.ElementTree import Element, tostring
@@ -79,6 +80,9 @@ def notify(exc_info, request, name, api_key=None, environment=None, url=None,
     notice.append(_request_element(request, component=component))
 
     server_environment = Element("server-environment")
+    pwd = os.environ.get('PWD')
+    if pwd:
+      server_environment.append(_el_with_text("project-root", pwd))
     server_environment.append(_el_with_text("environment-name", environment))
     notice.append(server_environment)
 
