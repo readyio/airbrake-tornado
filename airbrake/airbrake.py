@@ -82,7 +82,12 @@ def notify(exc_info, request, name, api_key=None, environment=None, url=None,
     notice.append(notifier)
 
     error = Element("error")
-    error.append(_el_with_text("message", exc_info[1].message))
+    message = ''
+    if exc_info[1].message:
+        message = exc_info[1].message.strip()
+    if not message:
+        message = str(exc_info[1]).strip()
+    error.append(_el_with_text("message", message))
     error.append(_el_with_text("class", exc_info[1].__class__.__name__))
 
     error.append(_backtrace_element(exc_info))
