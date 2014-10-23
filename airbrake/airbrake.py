@@ -89,7 +89,7 @@ def notify(exc_info, request, name, api_key=None, environment=None, url=None,
     httpclient.AsyncHTTPClient().fetch(
         "http://airbrake.io/notifier_api/v2/notices",
         method="POST",
-        body=tostring(notice),
+        body=tostring(notice, encoding='UTF-8'),
         callback=handle_request
     )
 
