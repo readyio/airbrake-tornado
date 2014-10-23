@@ -19,7 +19,7 @@ def _traceback_line(filename, line, method):
 
 def _cgi_data_element(req):
     cgi_data = Element("cgi-data")
-    for key, val in [("HTTP_USER_AGENT", req.headers.get("User-Agent", ""))]:
+    for key, val in req.headers.iteritems():
         cgi_data.append(_el_with_text("var", val, key=key))
     return cgi_data
 
