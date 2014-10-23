@@ -26,8 +26,9 @@ def _cgi_data_element(req):
 
 def _params_element(req):
     params = Element("params")
-    for key, val in [("HTTP_METHOD", req.method)]:
-        params.append(_el_with_text("var", val, key=key))
+    for key, val in req.arguments.iteritems():
+        joined = u','.join([v.decode('utf-8') for v in val])
+        params.append(_el_with_text("var", joined, key=key))
     return params
 
 
